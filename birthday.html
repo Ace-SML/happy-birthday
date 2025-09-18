@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday Mum 🎉</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(135deg, #fff8f0, #fff0f8);
+    overflow: hidden;
+  }
+  #title {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    user-select: none;
+  }
+  h1 {
+    font-size: clamp(2rem, 8vw, 5rem);
+    color: #ff4d6d;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    z-index: 1;
+    position: relative;
+  }
+    .lead {
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        color: #333;
+        text-align: center;
+        margin-top: 0.5em;
+        z-index: 1;
+        position: relative;
+    }
+  canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+    <div id="title">
+  <h1 id="title">
+        <span class="spark">🎉</span>
+        Happy Birthday, Mum!
+        <span class="spark">💐</span>
+      </h1>
+      <p class="lead">Wishing you a day filled with love, laughter and all the joy.</p>
+      <p>Courtesy: Your Lovely Kids</p>
+      </div>
+        <canvas id="confetti"></canvas>
+
+<script>
+(() => {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const colors = ["#FF3B30","#FF9500","#FFCC00","#34C759","#5AC8FA","#007AFF","#AF52DE","#FF2D55"];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function random(min, max) { return Math.random() * (max - min) + min; }
+
+  function createParticle() {
+    return {
+      x: random(0, canvas.width),
+      y: -10,
+      size: random(5, 10),
+      color: colors[Math.floor(Math.random()*colors.length)],
+      speedX: random(-1, 1),
+      speedY: random(2, 6),
+      rotation: random(0, 360),
+      rotationSpeed: random(-5, 5)
+    };
+  }
+
+  function update() {
+    if (particles.length < 200) {
+      particles.push(createParticle());
+    }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p, i) => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.rotation += p.rotationSpeed;
+      if (p.y > canvas.height) {
+        particles[i] = createParticle(); // reset when out of view
+        particles[i].y = -10;
+      }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+      ctx.restore();
+    });
+    requestAnimationFrame(update);
+  }
+
+  update();
+})();
+</script>
+</body>
+</html>
